@@ -14,12 +14,6 @@ TOKEN = ""
 FORM_CHAT = 0
 TO_CHAT = 0
 
-with open('chats.json', 'r') as f:
-    chats = json.load(f)
-
-with open('allowed.json', 'r') as f:
-    allowed = set(json.load(f))
-
 if os.path.isfile('config.json'):
     with open('config.json', 'r') as f:
         config = json.load(f)
