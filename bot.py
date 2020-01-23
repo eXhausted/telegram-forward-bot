@@ -34,12 +34,13 @@ def log(msg, reason):
     f.write(f"{reason}:\r\n{msg}\r\n")
 
 
-def contains_link(msg):
+def contains_link_or_image(msg):
     result = 'entities' in msg and reduce(
         lambda result, entity: result or (entity['type'] == 'url'), 
         msg['entities'], 
         False
     )
+    result = result or 'photo' in msg
     if not result:
         log(msg, 'has no link')
     return result
@@ -57,9 +58,11 @@ def is_editted(msg):
     return result
 
 def handle(msg):
-    if from_correct_chat(msg) and not is_editted(msg) and contains_link(msg):
+    print(msg)
+    if from_correct_chat(msg) and not is_editted(msg) and contains_link_or_image(msg):
         print(f"trying to forward {msg['message_id']} from {msg['chat']['id']} to {TO_CHAT}")
-        bot.forwardMessage(TO_CHAT, msg['chat']['id'], msg['message_id'])
+        bot.sendMessage(TO_CHAT, f"https://t.me/{msg['chat']['username']}/{msg['message_id']}")
+        # bot.forwardMessage(TO_CHAT, msg['chat']['id'], msg['message_id'])
 
 bot = telepot.Bot(TOKEN)
 
